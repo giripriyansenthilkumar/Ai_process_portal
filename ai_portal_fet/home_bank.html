@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Approval Process Portal</title>
+    <link rel="stylesheet" href="style1.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div id="loading" class="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <div id="popup" class="popup" style="display: none;">
+        <p id="popupMessage"></p>
+        <button onclick="closePopup()">Close</button>
+    </div>
+
+    <header>
+        <div class="header-container">
+            <!-- Checkbox burger menu near h1 header -->
+            <label class="burger" for="burger">
+                <input type="checkbox" id="burger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </label>
+            <h1>AI Approval Process Portal</h1>
+
+            
+        </div>
+        
+        <!-- Side menu container -->
+        <div id="menuContainer" class="menu-hidden">
+            <nav id="menu">
+                <ul>
+                    <li><a href="verify_bank.html"><i class="icon-apply"></i>Verify</a></li>
+                    <li><a href="home_ai.html"><i class="icon-track"></i>Logout</a></li>
+                    <!-- Login menu removed -->
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h2 style="text-align: center;">Welcome back!</h2>
+        <p style="text-align: center;">Your account is ready to use. Explore your dashboard for details.</p>
+        <a href="app1.html" class="btn" style="text-align: center;">Verify Documents</a>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 AI Approval Process Portal</p>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            const menuContainer = document.getElementById('menuContainer');
+            // Toggle the visibility of the menu container
+            menuContainer.style.display = (menuContainer.style.display === 'block') ? 'none' : 'block';
+        }
+    </script>
+</body>
+</html>

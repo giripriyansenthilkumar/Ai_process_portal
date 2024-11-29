@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - AI Approval Process Portal</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        /* POPPINS FONT */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: url("C:\Users\nisahakar T\Downloads\SATURADAY PROJECT\final1\final\Nitro_Wallpaper_02_3840x2400.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .form-box {
+            background: rgba(39, 39, 39, 0.4);
+            padding: 40px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 350px;
+        }
+
+        .form-box header {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .input-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            font-size: 14px;
+            border: none;
+            border-radius: 25px;
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            transition: background 0.2s ease;
+        }
+
+        .input-field:focus, .input-field:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .input-box i {
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            color: #fff;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 10px 0;
+            font-size: 14px;
+            font-weight: 500;
+            color: black;
+            background: rgba(255, 255, 255, 0.7);
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .two-col {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #fff;
+        }
+
+        .two-col a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .two-col a:hover {
+            text-decoration: underline;
+        }
+        .footer{
+            width: 100%;
+            color: #eeeeca;
+            padding: 0.5em ;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-box">
+        <header>Login</header>
+        <form id="loginForm" onsubmit="return handleLogin(event)">
+            <div class="input-box">
+                <i class="bx bx-user"></i>
+                <input type="text" id="username" name="username" class="input-field" placeholder="Username" required>
+            </div>
+
+            <div class="input-box">
+                <i class="bx bx-lock-alt"></i>
+                <input type="password" id="password" name="password" class="input-field" placeholder="Password" required>
+            </div>
+
+            <button type="submit" class="btn">Sign In</button>
+        </form>
+        <div class="two-col">
+            <label><input type="checkbox"> Remember Me</label>
+            <a href="#">Forgot Password?</a>
+        </div>
+        <p style="text-align:center; margin-top:20px;">
+            Don't have an account? <a href="{% url 'register' %}" style="color:#ffffff;">Register</a>
+        </p>
+    </div>
+    
+    <script>
+        async function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            const response = await fetch("{% url 'login_user' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                window.location.href = "{% url 'home' %}";
+            } else {
+                alert(data.message);
+            }
+        }
+    </script>
+</body>
+</html>

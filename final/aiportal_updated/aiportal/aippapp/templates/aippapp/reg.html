@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - AI Approval Process Portal</title>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #ffffff;
+        }
+
+        .header, .footer {
+            width: 100%;
+            background-color: #333;
+            color: #eeeeca;
+            text-align: center;
+            padding: 1em 0;
+        }
+
+        .form-section {
+            width: 80%;
+            max-width: 600px;
+            margin: 2em auto;
+            padding: 2em;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f8f8f8;
+        }
+
+        form label, form input, form button {
+            display: block;
+            width: 100%;
+            margin-bottom: 1em;
+        }
+
+        form input, form button {
+            padding: 0.5em;
+            font-size: 1em;
+            border-radius: 5px;
+        }
+
+        form input {
+            border: 1px solid #ccc;
+            background-color: #fff;
+        }
+
+        form button {
+            background-color: #333;
+            color: #eeeeca;
+            border: none;
+            cursor: pointer;
+        }
+
+        form button:hover {
+            background-color: #555;
+        }
+
+        .captcha-box {
+            font-size: 1em;
+            margin-bottom: 1em;
+            color: #333;
+        }
+
+        .btn {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            padding: 0.5em 1em;
+            margin-top: 1em;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background-color: #555;
+        }
+
+        .link-btn {
+            text-align: center;
+            margin-top: 1em;
+            padding: 2em;
+        }
+
+        .link-btn a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .link-btn a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <script src="{% static 'js/reg.js' %}" defer></script>
+</head>
+<body>
+    <header class="header">
+        <h1>Registration Page</h1>
+    </header>
+
+    <section class="form-section">
+        <form id="registrationForm" method="POST" action="{% url 'register_user' %}">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="{{ form.email.value }}" required>
+                {{ form.email.errors }}
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" name="phone" value="{{ form.phone.value }}" required>
+                {{ form.phone.errors }}
+            </div>
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" value="{{ form.username.value }}" required>
+                {{ form.username.errors }}
+            </div>
+            <div class="form-group">
+                <label for="dob">Date of Birth:</label>
+                <input type="date" id="dob" name="dob" value="{{ form.dob.value }}" required>
+                {{ form.dob.errors }}
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" value="{{ form.password.value }}" required>
+                {{ form.password.errors }}
+            </div>
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password:</label>
+                <input type="password" id="confirm_password" name="confirm_password" value="{{ form.confirm_password.value }}" required>
+                {{ form.confirm_password.errors }}
+            </div>
+            <p id="passwordMessage" style="color: #333; font-size: 0.5em;"></p>
+            <button type="submit" class="btn">Register</button>
+        </form>
+        <div class="link-btn">
+            <a href="{% url 'login' %}" class="btn">Login</a>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>&copy; 2024 AI Approval Process Portal</p>
+    </footer>
+</body>
+</html>

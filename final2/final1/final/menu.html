@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="menu.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    </head>
+<body>
+    <!-- Burger icon for toggling menu -->
+<label class="burger" for="burger">
+  <input type="checkbox" id="burger" onclick="toggleMenu()">
+  <span></span>
+  <span></span>
+  <span></span>
+</label>
+
+<!-- Side menu container -->
+<div id="menuContainer">
+  <nav id="menu">
+    <ul>
+      <li><a href="home.html"><i class="icon-home"></i>Home</a></li>
+      <li><a href="application_1.html"><i class="icon-apply"></i>Apply</a></li>
+      <li><a href="status.html"><i class="icon-track"></i>Track Status</a></li>
+      <li><a href="login.html"><i class="icon-login"></i>Login</a></li>
+    </ul>
+  </nav>
+</div>
+
+<script>
+function toggleMenu() {
+  const menuContainer = document.getElementById('menuContainer');
+  // Toggle the visibility of the menu container
+  menuContainer.style.display = (menuContainer.style.display === 'block') ? 'none' : 'block';
+}</script>
+</body>
+</html>

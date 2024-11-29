@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visa Application Form</title>
+  <link rel="stylesheet" href="home.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Visa Application Form</h1>
+    <form id="visa-form" enctype="multipart/form-data">
+      <!-- Personal Information Section -->
+      <h2>Personal Information</h2>
+      <div class="form-group">
+        <label for="full_name">Full Name:</label>
+        <input type="text" id="full_name" name="full_name" required>
+      </div>
+      <div class="form-group">
+        <label for="passport_number">Passport Number:</label>
+        <input type="text" id="passport_number" name="passport_number" required>
+      </div>
+      <div class="form-group">
+        <label for="nationality">Nationality:</label>
+        <input type="text" id="nationality" name="nationality" required>
+      </div>
+      <div class="form-group">
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" name="dob" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone:</label>
+        <input type="tel" id="phone" name="phone" required>
+      </div>
+
+      <!-- Travel Information Section -->
+      <h2>Travel Information</h2>
+      <div class="form-group">
+        <label for="visa_type">Visa Type:</label>
+        <input type="text" id="visa_type" name="visa_type" required>
+      </div>
+      <div class="form-group">
+        <label for="travel_date">Expected Travel Date:</label>
+        <input type="date" id="travel_date" name="travel_date" required>
+      </div>
+      <div class="form-group">
+        <label for="purpose_of_travel">Purpose of Travel:</label>
+        <input type="text" id="purpose_of_travel" name="purpose_of_travel" required>
+      </div>
+
+      <!-- Document Uploads -->
+      <h2>Document Uploads</h2>
+      <div class="form-group">
+        <label for="passport_copy">Passport Copy:</label>
+        <input type="file" id="passport_copy" name="passport_copy" accept="application/pdf,image/*" required>
+      </div>
+      <div class="form-group">
+        <label for="photo">Photo:</label>
+        <input type="file" id="photo" name="photo" accept="image/*" required>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit">Submit Application</button>
+    </form>
+
+    <p id="status-message"></p>
+  </div>
+
+  <script src="home.js"></script>
+</body>
+</html>

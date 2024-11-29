@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application - Bank Details</title>
+    <link rel="stylesheet" href="style_app1.css">
+</head>
+<body>
+   <!-- header.html -->
+<header>
+    <h1>AI Approval Process Portal</h1>
+    <nav>
+        <ul>
+            <li><a href="home.html">Home</a></li>
+            <li><a href="application_1.html">Apply</a></li>
+            <li><a href="status.html">Track Status</a></li>
+            <li><a href="login.html" id="loginLink">Login</a></li>
+        </ul>
+    </nav>
+</header>
+
+    <section class="form-section">
+        <h2>Applicant Bank Details</h2>
+        <form action="application.html">
+            <!-- Bank Details Form -->
+            <label for="accountNumber">Account Number:</label>
+            <input type="text" id="accountNumber" name="accountNumber" pattern="[0-9]{9,18}" title="Account number should be between 9 to 18 digits" required>
+
+            <label for="bankName">Bank Name:</label>
+            <input type="text" id="bankName" name="bankName" required>
+
+            <label for="accountType">Account Type:</label>
+            <select id="accountType" name="accountType" required>
+                <option value="savings">Savings</option>
+                <option value="current">Current</option>
+                <option value="salary">Salary</option>
+            </select>
+
+            <label for="ifscCode">IFSC Code:</label>
+            <input type="text" id="ifscCode" name="ifscCode" pattern="[A-Za-z]{4}[0-9]{7}" title="IFSC Code must be in the format: XXXX1234567" required>
+
+            <label for="branchName">Bank Branch Name:</label>
+            <input type="text" id="branchName" name="branchName" required>
+
+            <label for="aadharNumber">Aadhar Number:</label>
+            <input type="text" id="aadharNumber" name="aadharNumber" pattern="[0-9]{12}" title="Aadhar number should be 12 digits" required>
+
+            <!-- Additional bank-related details -->
+            <label for="bankStatements">Bank Statements (Last 6 months):</label>
+            <input type="file" id="bankStatements" name="bankStatements" accept=".pdf,.docx,.jpg,.jpeg,.png" required>
+
+            <label for="loanAccount">Existing Loan Account Number (If Any):</label>
+            <input type="text" id="loanAccount" name="loanAccount" pattern="[0-9]{9,18}" title="Loan account number should be between 9 to 18 digits">
+
+            <!-- Optional income and financial details -->
+            <label for="monthlyIncome">Applicant's Monthly Income (INR):</label>
+            <input type="number" id="monthlyIncome" name="monthlyIncome" min="0" required>
+
+            <label for="otherIncomeSources">Other Income Sources (If Any):</label>
+            <textarea id="otherIncomeSources" name="otherIncomeSources" rows="3" placeholder="Specify any additional income sources..."></textarea>
+
+            <button type="button" onclick="location.href='app2.html'" class="btn">Previous</button>
+            <button type="submit" onclick="location.href='app4.html'" class="btn">Next</button>
+        </form>
+            <!-- Submit Button -->
+            <button type="submit" onclick="location.href='app1.html'" class="btn">1</button>
+            <button type="submit" onclick="location.href='app2.html'" class="btn">2</button>
+            <button type="submit" onclick="location.href='app4.html'" class="btn">4</button>
+        </form>
+    </section>
+
+  <!-- footer.html -->
+<footer>
+    <p>&copy; 2024 AI Approval Process Portal</p>
+</footer>
+</body>
+</html>

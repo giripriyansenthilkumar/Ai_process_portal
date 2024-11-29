@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application - Documents Upload</title>
+    <link rel="stylesheet" href="{% static 'aippapp/style_app.css' %}">
+    <script src="script_app.js" defer></script>
+    <style>
+        /* Style for the popup */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .popup-content {
+            background-color: #eeeeca;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .popup button {
+            background-color: #5cb85c;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Include header -->
+    <header>
+        <h1>AI Approval Process Portal</h1>
+        
+    </header>
+
+    <section class="form-section">
+        <h2>Upload Documents</h2>
+        <form id="documentForm" action="{% url 'home' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <!-- Document Type Dropdown -->
+            <div id="documentContainer">
+                <label for="document">Document Type:</label>
+                <select id="documentSelect" onchange="addDocumentField()">
+                    <option value="">Select Document</option>
+                    <option value="aadhaar">Aadhaar Card</option>
+                    <option value="pan">PAN Card</option>
+                    <option value="income_certificate">Income Certificate</option>
+                    <option value="bank_statement">Bank Statement</option>
+                    <option value="admission_letter">Admission Letter</option>
+                    <option value="course_fee_structure">Course Fee Structure</option>
+                    <option value="allotment_order">Allotment Order</option>
+                    <option value="community_certificate">Community Certificate</option>
+                </select>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <button type="button" onclick="location.href="{% url 'app3' %}"" class="btn">Previous</button>
+            <button type="submit" class="btn" onclick="submitForm(event)">Submit</button>
+        </form>
+            <!-- Submit Buttons -->
+            <button type="submit" onclick="location.href="{% url 'app1' %}"" class="btn">1</button>
+            <button type="submit" onclick="location.href="{% url 'app2' %}"" class="btn">2</button>
+            <button type="submit" onclick="location.href="{% url 'app3' %}"" class="btn">3</button>
+        </form>
+    </section>
+
+    <!-- Success Popup -->
+    <div id="successPopup" class="popup">
+        <div class="popup-content">
+            <h3>Application Submitted Successfully!</h3>
+            <button onclick="closePopup()">Close</button>
+        </div>
+    </div>
+
+    <!-- Include footer -->
+    <footer>
+        <p>&copy; 2024 AI Approval Process Portal</p>
+    </footer>
+
+    <script>
+        // Function to display the success popup
+        function submitForm(event) {
+            event.preventDefault();  // Prevent form submission
+
+            // Show the success popup
+            document.getElementById('successPopup').style.display = 'flex';
+
+            // Optionally, you can redirect to another page after a delay
+            // setTimeout(function() {
+            //     window.location.href = 'home_ai.html';  // Redirect to another page after 3 seconds
+            // }, 3000);
+        }
+
+        // Function to close the popup
+        function closePopup() {
+            document.getElementById('successPopup').style.display = 'none';
+            window.location.href = 'home_ai.html';  // Redirect to home page after closing popup
+        }
+    </script>
+</body>
+</html>

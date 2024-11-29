@@ -1,0 +1,135 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application - Family Details</title>
+    <link rel="stylesheet" href="{% static 'aippapp/style_app.css' %}">
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <h1>AI Approval Process Portal</h1>
+    </header>
+
+    <!-- Form Section -->
+    <section class="form-section">
+        <h2>Applicant Family Details</h2>
+        <form action="{% url 'save_family_details' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <!-- Applicant Email -->
+            <label for="applicantEmail">Applicant Email:</label>
+            <input type="email" id="applicantEmail" name="applicant_email" required>
+
+            <!-- Father's Details -->
+            <h3>Father's Personal Information</h3>
+            <label for="fatherName">Father's Full Name:</label>
+            <input type="text" id="fatherName" name="father_name" pattern="[A-Za-z\s]+" title="Only letters are allowed" required>
+            
+            <label for="fatherDob">Father's Date of Birth:</label>
+            <input type="date" id="fatherDob" name="father_dob" required>
+            
+            <label for="fatherPhone">Father's Phone Number:</label>
+            <input type="tel" id="fatherPhone" name="father_phone" pattern="[0-9]{10}" title="Only 10 digit numbers allowed" required>
+            
+            <label for="fatherEmail">Father's Email:</label>
+            <input type="email" id="fatherEmail" name="father_email" required>
+            
+            <label for="fatherOccupation">Father's Occupation:</label>
+            <input type="text" id="fatherOccupation" name="father_occupation" required>
+            
+            <label for="fatherEmployer">Father's Employer/Business Name:</label>
+            <input type="text" id="fatherEmployer" name="father_employer" required>
+            
+            <label for="fatherIncome">Father's Annual Income (INR):</label>
+            <input type="number" id="fatherIncome" name="father_income" required>
+            
+            <label for="fatherEducation">Father's Educational Qualification:</label>
+            <input type="text" id="fatherEducation" name="father_education" required>
+            
+            <!-- Mother's Details -->
+            <h3>Mother's Personal Information</h3>
+            <label for="motherName">Mother's Full Name:</label>
+            <input type="text" id="motherName" name="mother_name" pattern="[A-Za-z\s]+" title="Only letters are allowed" required>
+            
+            <label for="motherDob">Mother's Date of Birth:</label>
+            <input type="date" id="motherDob" name="mother_dob" required>
+            
+            <label for="motherPhone">Mother's Phone Number:</label>
+            <input type="tel" id="motherPhone" name="mother_phone" pattern="[0-9]{10}" title="Only 10 digit numbers allowed" required>
+            
+            <label for="motherEmail">Mother's Email:</label>
+            <input type="email" id="motherEmail" name="mother_email" required>
+            
+            <label for="motherOccupation">Mother's Occupation:</label>
+            <input type="text" id="motherOccupation" name="mother_occupation" required>
+            
+            <label for="motherEmployer">Mother's Employer/Business Name:</label>
+            <input type="text" id="motherEmployer" name="mother_employer" required>
+            
+            <label for="motherIncome">Mother's Annual Income (INR):</label>
+            <input type="number" id="motherIncome" name="mother_income" required>
+            
+            <label for="motherEducation">Mother's Educational Qualification:</label>
+            <input type="text" id="motherEducation" name="mother_education" required>
+
+            <!-- Parents' Financial Information -->
+            <h3>Parents' Financial Information</h3>
+            <label for="fatherITR">Father's Income Tax Returns (ITR) (Last 2–3 years):</label>
+            <input type="file" id="fatherITR" name="father_itr" accept=".pdf,.docx,.jpg,.jpeg,.png" required>
+            
+            <label for="fatherBankStatements">Father's Bank Statements (Last 6 months):</label>
+            <input type="file" id="fatherBankStatements" name="father_bank_statements" accept=".pdf,.docx,.jpg,.jpeg,.png" required>
+            
+            <label for="fatherAssets">Father's Proof of Assets:</label>
+            <input type="file" id="fatherAssets" name="father_assets" accept=".pdf,.docx,.jpg,.jpeg,.png">
+            
+            <label for="existingLoans">Father's Existing Loans (If any):</label>
+            <input type="text" id="existingLoans" name="existing_loans">
+
+            <!-- Guarantor Information (If applicable) -->
+            <h3>Guarantor Information (If Applicable)</h3>
+            <label for="guarantorName">Guarantor's Full Name:</label>
+            <input type="text" id="guarantorName" name="guarantor_name">
+            
+            <label for="guarantorRelation">Guarantor's Relationship to Applicant:</label>
+            <input type="text" id="guarantorRelation" name="guarantor_relation">
+            
+            <label for="guarantorOccupation">Guarantor's Occupation:</label>
+            <input type="text" id="guarantorOccupation" name="guarantor_occupation">
+            
+            <label for="guarantorIncome">Guarantor's Annual Income (INR):</label>
+            <input type="number" id="guarantorIncome" name="guarantor_income">
+            
+            <label for="guarantorITR">Guarantor's Income Tax Returns (ITR):</label>
+            <input type="file" id="guarantorITR" name="guarantor_itr" accept=".pdf,.docx,.jpg,.jpeg,.png">
+            
+            <label for="guarantorBankStatements">Guarantor's Bank Statements:</label>
+            <input type="file" id="guarantorBankStatements" name="guarantor_bank_statements" accept=".pdf,.docx,.jpg,.jpeg,.png">
+            
+            <!-- Parents' Educational Background -->
+            <h3>Parents' Educational Background</h3>
+            <label for="fatherEducationLevel">Father's Highest Educational Qualification:</label>
+            <input type="text" id="fatherEducationLevel" name="father_education_level" required>
+            
+            <label for="motherEducationLevel">Mother's Highest Educational Qualification:</label>
+            <input type="text" id="motherEducationLevel" name="mother_education_level" required>
+
+            <!-- Navigation Buttons -->
+            <button type="button" onclick="location.href='{% url 'app1' %}'" class="btn">Previous</button>
+            <button type="submit" class="btn">Next</button>
+        </form>
+
+        <!-- Quick Navigation -->
+        <button type="button" onclick="location.href='{% url 'app1' %}'" class="btn">1</button>
+        <button type="button" onclick="location.href='{% url 'app3' %}'" class="btn">3</button>
+        <button type="button" onclick="location.href='{% url 'app4' %}'" class="btn">4</button>
+    </section>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2024 AI Approval Process Portal</p>
+    </footer>
+</body>
+</html>

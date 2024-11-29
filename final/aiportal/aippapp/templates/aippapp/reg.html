@@ -1,0 +1,215 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - AI Approval Process Portal</title>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #ffffff;
+        }
+
+        .header, .footer {
+            width: 100%;
+            background-color: #333;
+            color: #eeeeca;
+            text-align: center;
+            padding: 1em 0;
+        }
+
+        .form-section {
+            width: 80%;
+            max-width: 600px;
+            margin: 2em auto;
+            padding: 2em;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f8f8f8;
+        }
+
+        form label, form input, form button {
+            display: block;
+            width: 100%;
+            margin-bottom: 1em;
+        }
+
+        form input, form button {
+            padding: 0.5em;
+            font-size: 1em;
+            border-radius: 5px;
+        }
+
+        form input {
+            border: 1px solid #ccc;
+            background-color: #fff;
+        }
+
+        form button {
+            background-color: #333;
+            color: #eeeeca;
+            border: none;
+            cursor: pointer;
+        }
+
+        form button:hover {
+            background-color: #555;
+        }
+
+        .captcha-box {
+            font-size: 1em;
+            margin-bottom: 1em;
+            color: #333;
+        }
+
+        .btn {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            padding: 0.5em 1em;
+            margin-top: 1em;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background-color: #555;
+        }
+
+        .link-btn {
+            text-align: center;
+            margin-top: 1em;
+            padding :2em;
+        }
+
+        .link-btn a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .link-btn a:hover {
+            text-decoration: underline;
+        }
+  
+    </style>
+    <script>
+        function validateForm() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const message = document.getElementById('passwordMessage');
+
+            if (password !== confirmPassword) {
+                message.innerText = "Passwords do not match";
+                return false;
+            }
+            message.innerText = "";
+
+            if (!validateCaptcha()) {
+                return false;
+            }
+
+            return true;
+        }
+
+        function validateCaptcha() {
+            const userAnswer = parseInt(document.getElementById("captchaAnswer").value);
+            if (userAnswer !== correctAnswer) {
+                alert("Incorrect CAPTCHA answer. Please try again.");
+                return false;
+            }
+            return true;
+        }
+
+        const num1 = Math.floor(Math.random() * 10) + 1;
+        const num2 = Math.floor(Math.random() * 10) + 1;
+        const correctAnswer = num1 + num2;
+
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("captchaQuestion").innerText = `${num1} + ${num2} = ?`;
+        });
+
+        async function submitForm(event) {
+            event.preventDefault();
+
+            if (validateForm()) {
+                const formData = {
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    username: document.getElementById('username').value,
+                    dob: document.getElementById('dob').value,
+                    password: document.getElementById('password').value,
+                };
+
+                try {
+                    const response = await fetch('http://localhost:3000/register', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(formData),
+                    });
+
+                    if (response.ok) {
+                        alert('Registration successful!');
+                        window.location.href = '/success';
+                    } else {
+                        const errorMessage = await response.text();
+                        alert('Registration failed: ' + errorMessage);
+                    }
+                } catch (error) {
+                    alert('An error occurred: ' + error.message);
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    <header class="header">
+        <h1>Registration Page</h1>
+    </header>
+
+    <section class="form-section">
+        <form id="registrationForm" onsubmit="submitForm(event)">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" required>
+
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob" name="dob" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="confirmPassword">Confirm Password:</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" required>
+            <p id="passwordMessage" style="color: 4,rgb(233, 233, 233); font-size: 0.5em;"></p>
+
+            <label for="captcha">Please solve: </label>
+            <span id="captchaQuestion" class="captcha-box"></span>
+            <input type="text" id="captchaAnswer" required placeholder="Enter answer">
+
+            <button type="submit" class="btn">Register</button>
+        </form>
+        <div class="link-btn">
+            <a href="{% url 'login' %}" class="btn">Login</a>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>&copy; 2024 AI Approval Process Portal</p>
+    </footer>
+</body>
+</html>

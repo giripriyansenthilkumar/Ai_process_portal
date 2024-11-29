@@ -1,0 +1,220 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application - Documents Upload</title>
+    <style>
+        /* Style for the popup */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .popup-content {
+            background-color: #eeeeca;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .popup button {
+            background-color: #5cb85c;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #ffffff;
+        }
+        .header, .footer {
+            width: 100%;
+            background-color: #333;
+            color: #53b6c5;
+            text-align: center;
+            padding: 1em 0;
+        }
+        .form-section {
+            width: 80%;
+            max-width: 600px;
+            margin: 2em auto;
+            padding: 2em;
+            border: 1px solid #ccc;
+            background-color: #53b6c5;
+            border-radius: 8px;
+        }
+        form label, form input, form button {
+            display: block;
+            width: 100%;
+            margin-bottom: 1em;
+        }
+        form input, form button {
+            padding: 0.5em;
+            font-size: 1em;
+            border-radius: 10px;
+        }
+        form button {
+            background-color: #333;
+            color: #eeeeca;
+            border: none;
+            cursor: pointer;
+        }
+        form button:hover {
+            background-color: #555;
+        }
+        .upload-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .upload-container button {
+            padding: 8px 10px;
+            font-size: 14px;
+            background-color: #333;
+            color: #eeeeca;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .upload-container button.success {
+            background-color: #4CAF50;
+            color: #fff;
+        }
+        .upload-container button.success::after {
+            content: ' ✔';
+        }
+    </style>
+</head>
+<body>
+    <!-- Include header -->
+    <header>
+        <h1>AI Approval Process Portal</h1>
+    </header>
+
+    <!-- Form Section -->
+    <section class="form-section">
+        <h2>Upload Documents</h2>
+        <form id="documentForm" action="{% url 'upload_document' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div id="documentContainer"></div>
+
+            <!-- Navigation Buttons -->
+            <button type="button" onclick="location.href='{% url 'previous_page' %}'" class="btn">Previous</button>
+            <button type="submit" class="btn">Submit</button>
+        </form>
+        <!-- Success/ Error Messages -->
+        {% if success %}
+        <p style="color: green;">{{ success }}</p>
+        {% endif %}
+        {% if error %}
+        <p style="color: red;">{{ error }}</p>
+        {% endif %}
+    </section>
+
+    <!-- Success Popup -->
+    <div id="successPopup" class="popup">
+        <div class="popup-content">
+            <h3>Application Submitted Successfully!</h3>
+            <button onclick="closePopup()">Close</button>
+        </div>
+    </div>
+
+    <!-- Include footer -->
+    <footer>
+        <p>&copy; 2024 AI Approval Process Portal</p>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const documents = [
+                { id: "aadhaar", label: "Aadhaar Card" },
+                { id: "pan", label: "Pan Card" },
+                { id: "income_certificate", label: "Income Certificate" },
+                { id: "bank_statement", label: "Bank Statement" },
+                { id: "admission_letter", label: "Admission Letter" },
+                { id: "course_fee_structure", label: "Course Fee Structure" },
+                { id: "allotment_order", label: "Allotment Order" },
+                { id: "community_certificate", label: "Community Certificate" }
+            ];
+
+            const container = document.getElementById("documentContainer");
+
+            documents.forEach(doc => {
+                const docField = createDocumentField(doc.id, doc.label);
+                container.appendChild(docField);
+            });
+        });
+
+        function createDocumentField(id, label) {
+            const container = document.createElement("div");
+            container.className = "document-field";
+
+            const docLabel = document.createElement("label");
+            docLabel.innerText = `${label} Number:`;
+
+            const docInput = document.createElement("input");
+            docInput.type = "text";
+            docInput.id = `${id}_number`;
+            docInput.name = `${id}_number`;
+            docInput.placeholder = `Enter ${label} number`;
+            docInput.required = true;
+
+            const uploadContainer = document.createElement("div");
+            uploadContainer.className = "upload-container";
+
+            const fileInput = document.createElement("input");
+            fileInput.type = "file";
+            fileInput.id = `${id}_file`;
+            fileInput.name = `${id}_file`;
+            fileInput.accept = ".pdf, .jpg, .jpeg";
+            fileInput.required = true;
+
+            const uploadButton = document.createElement("button");
+            uploadButton.type = "button";
+            uploadButton.innerText = "Upload";
+            uploadButton.onclick = () => handleUpload(id, uploadButton);
+
+            uploadContainer.appendChild(fileInput);
+            uploadContainer.appendChild(uploadButton);
+
+            container.appendChild(docLabel);
+            container.appendChild(docInput);
+            container.appendChild(uploadContainer);
+
+            return container;
+        }
+
+        function handleUpload(id, uploadButton) {
+            const fileInput = document.getElementById(`${id}_file`);
+            const documentNumber = document.getElementById(`${id}_number`).value;
+
+            if (fileInput.files.length > 0 && documentNumber) {
+                uploadButton.innerText = "Uploaded";
+                uploadButton.classList.add("success");
+            } else {
+                alert('Please provide a file and enter the document number.');
+            }
+        }
+
+        function closePopup() {
+            document.getElementById('successPopup').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

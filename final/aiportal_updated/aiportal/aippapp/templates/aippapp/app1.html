@@ -1,0 +1,327 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application - Personal Details</title>
+    <link rel="stylesheet" href="{% static 'aippapp/style_app.css' %}">
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <h1>AI Approval Process Portal</h1>
+    </header>
+    <!-- Form Section -->
+    <section class="form-section">
+        <h2>Applicant Personal Details</h2>
+        <form action="{% url 'save_applicant' %}" method="POST">
+            {% csrf_token %}
+            <!-- Full Name -->
+            <label for="fullName">Full Name:</label>
+            <input type="text" id="fullName" name="full_name" required pattern="[A-Za-z\s]+" title="Full name should contain only letters and spaces.">
+            
+            <!-- Mobile Number -->
+            <label for="mobileNumber">Mobile Number:</label>
+            <input type="text" id="mobileNumber" name="mobile_number" required pattern="\d{10}" maxlength="10" title="Mobile number must be exactly 10 digits.">
+            
+            <!-- Email -->
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" title="Please enter a valid email address.">
+            
+            <!-- Date of Birth -->
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob" name="dob" required>
+
+            <!-- Country Dropdown -->
+            <label for="country">Country:</label>
+            <select id="country" name="country" required>
+                <option value="India">India</option>
+            </select>
+
+            <!-- State Dropdown -->
+            <label for="state">State:</label>
+            <select id="state" name="state" required onchange="populateCities()">
+                <option value="">Select State</option>
+            </select>
+
+            <!-- City Dropdown -->
+            <label for="city">City:</label>
+            <select id="city" name="city" required>
+                <option value="">Select City</option>
+            </select>
+
+            <button type="submit" onclick="location.href='{% url 'app2' %}'" class="btn">Next</button>
+        </form>
+
+        <!-- Navigation Buttons -->
+        <button type="button" onclick="location.href='{% url 'app2' %}'" class="btn">2</button>
+        <button type="button" onclick="location.href='{% url 'app3' %}'" class="btn">3</button>
+        <button type="button" onclick="location.href='{% url 'app4' %}'" class="btn">4</button>
+    
+    </section>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2024 AI Approval Process Portal</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Data object for states and cities
+        const locationData = {
+            "Andhra Pradesh": ["Visakhapatnam", "Vijayawada", "Guntur", "Nellore", "Tirupati", "Kurnool", 
+                "Rajahmundry", "Kakinada", "Eluru", "Ongole", "Anantapur", "Kadapa", 
+                "Chittoor", "Srikakulam", "Machilipatnam", "Vizianagaram", "Nandyal", 
+                "Proddatur", "Adoni", "Tenali", "Bhimavaram", "Madanapalle", "Chilakaluripet", 
+                "Hindupur", "Tadepalligudem", "Bapatla", "Narasaraopet", "Dharmavaram", 
+                "Gudivada", "Yemmiganur", "Markapur", "Nagari", "Kavali", "Gooty", 
+                "Vinukonda", "Sattenapalle", "Punganur", "Tadipatri", "Palamaner", 
+                "Mandapeta", "Narasapuram", "Pedana", "Rayachoti", "Tuni", "Amalapuram", 
+                "Bobbili", "Samalkot", "Nidadavole", "Salur", "Pithapuram", "Puttur", 
+                "Venkatagiri", "Ichchapuram", "Srisailam", "Ramachandrapuram", "Atmakur", 
+                "Macherla", "Jammalamadugu", "Rajampet", "Gudur", "Kanigiri", "Sullurpeta", 
+                "Parvathipuram", "Rayadurg", "Sompeta", "Peddapuram", "Chirala", "Pulivendula", 
+                "Gajuwaka", "Mylavaram", "Addanki", "Yerraguntla", "Sarvepalli", "Palakollu", 
+                "Cheepurupalli", "Chintalapudi", "Bheemunipatnam", "Rampachodavaram", "Peddapuram", 
+                "Chandragiri", "Nuzvid", "Tadepalle", "Uravakonda", "Gudur", "Nellimarla", 
+                "Dhone", "Penukonda", "Kodumur", "Singarayakonda", "Anakapalle", "Chintalapudi", 
+                "Kondapalli", "Amadalavalasa", "Parlakhemundi", "Ponnur", "Polavaram", "Anaparthy", 
+                "Chagallu", "Jangareddigudem", "Kaikaluru", "Mandasa", "Mulakalacheruvu", "Kuppam", 
+                "Guntakal", "Nellore", "Repalle", "Sankaram"],
+            "Arunachal Pradesh": ["Itanagar", "Tawang", "Ziro", "Pasighat", "Along", "Tezu", "Bomdila", 
+                "Naharlagun", "Seppa", "Roing", "Namsai", "Changlang", "Daporijo", 
+                "Basar", "Khonsa", "Yingkiong", "Longding", "Deomali", "Anini", 
+                "Jairampur", "Hawai", "Koloriang", "Mechuka", "Pangin", "Singchung", 
+                "Miao", "Kaying", "Likabali", "Yupia", "Ruksin", "Bhalukpong"],
+            "Assam": [ "Guwahati", "Dibrugarh", "Silchar", "Jorhat", "Tezpur", "Nagaon", 
+                "Tinsukia", "Sivasagar", "Karimganj", "Lakhimpur", "Bongaigaon", 
+                "Barpeta", "Goalpara", "Dhubri", "Nalbari", "Kokrajhar", "Dhekiajuli", 
+                "Hojai", "Mangaldoi", "Dima Hasao", "Diphu", "Morigaon", "Rangia", 
+                "Golaghat", "Biswanath Chariali", "Sonari", "Majuli", "North Lakhimpur", 
+                "Hailakandi", "Margherita", "Udalguri", "Sibsagar", "Titabor", 
+                "Bilasipara", "Abhayapuri", "Pathsala", "Tangla", "Badarpur", 
+                "Mariani", "Bokakhat", "Digboi", "Chapar", "Tihu", "Amguri", "Sarupathar"],
+            "Bihar": [
+                "Patna", "Gaya", "Bhagalpur", "Muzaffarpur", "Darbhanga", "Bihar Sharif",
+                "Arrah", "Begusarai", "Katihar", "Munger", "Chhapra", "Purnia", 
+                "Saharsa", "Sasaram", "Hajipur", "Dehri", "Bettiah", "Motihari", 
+                "Siwan", "Nawada", "Jamui", "Buxar", "Sitamarhi", "Jehanabad", 
+                "Aurangabad", "Rajgir", "Samastipur", "Bagaha", "Supaul", "Madhubani", 
+                "Khagaria", "Bhabua", "Araria", "Sheohar", "Lakhisarai", "Saharsa", 
+                "Raxaul", "Forbesganj", "Narkatiaganj", "Jhajha", "Barh", "Madhepura", 
+                "Sugauli", "Sheikhpura", "Mokameh", "Phulwari Sharif", "Hilsa", "Maner"
+            ],
+            "Chhattisgarh": [
+                "Raipur", "Bilaspur", "Durg", "Bhilai", "Korba", "Raigarh", 
+                "Jagdalpur", "Ambikapur", "Dhamtari", "Mahasamund", "Chirmiri", 
+                "Rajnandgaon", "Manendragarh", "Kawardha", "Kondagaon", "Khairagarh", 
+                "Dongargarh", "Tilda", "Sakti", "Basna", "Naila Janjgir", 
+                "Mungeli", "Sarangarh", "Bijapur", "Bemetara", "Narayanpur", 
+                "Pathalgaon", "Patan", "Pandariya", "Surajpur", "Kanker", 
+                "Gariaband", "Dantewada", "Balod", "Baloda Bazar", "Baihar"
+            ],
+            "Goa": [
+                "Panaji", "Margao", "Vasco da Gama", "Mapusa", "Ponda",
+                "Bicholim", "Curchorem", "Canacona", "Sanquelim", "Valpoi", 
+                "Mormugao", "Quepem", "Sanguem", "Dharbandora"
+            ],
+            "Gujarat": [
+                "Ahmedabad", "Surat", "Vadodara", "Rajkot", "Bhavnagar", 
+                "Jamnagar", "Junagadh", "Gandhinagar", "Anand", "Navsari",
+                "Morbi", "Nadiad", "Bharuch", "Porbandar", "Mehsana", 
+                "Bhuj", "Patan", "Gondal", "Veraval", "Amreli",
+                "Surendranagar", "Botad", "Godhra", "Dahod", "Deesa", 
+                "Valsad", "Vapi", "Himatnagar", "Palanpur", "Kalol",
+                "Modasa", "Sanand", "Chhota Udaipur", "Dholka", "Kheda"
+            ],
+            "Haryana": [
+                "Gurgaon", "Faridabad", "Panipat", "Ambala", "Yamunanagar", 
+                "Hisar", "Karnal", "Sonipat", "Rohtak", "Panchkula",
+                "Bhiwani", "Sirsa", "Bahadurgarh", "Jind", "Thanesar",
+                "Kaithal", "Palwal", "Rewari", "Fatehabad", "Mahendragarh",
+                "Narnaul", "Charkhi Dadri", "Narwana", "Tohana", "Hansi",
+                "Ratia", "Gohana", "Samalkha", "Jhajjar", "Kalanaur"
+            ],
+            "Himachal Pradesh": [
+                "Shimla", "Manali", "Dharamshala", "Mandi", "Solan", 
+                "Kullu", "Chamba", "Bilaspur", "Hamirpur", "Kangra",
+                "Nahan", "Una", "Palampur", "Kasauli", "Sundernagar",
+                "Baddi", "Nalagarh", "Rohru", "Paonta Sahib", "Keylong",
+                "Rampur", "Jawalamukhi", "Jogindernagar", "Parwanoo", "Reckong Peo",
+                "Chail", "Dalhousie", "Kalpa", "Theog", "Banjar"
+            ],
+            "Jharkhand": [
+                "Ranchi", "Jamshedpur", "Dhanbad", "Bokaro", "Deoghar", 
+                "Hazaribagh", "Giridih", "Chatra", "Jamtara", "Koderma", 
+                "Ramgarh", "Dumka", "Pakur", "Sahebganj", "Godda",
+                "Simdega", "Latehar", "Lohardaga", "Palamu", "Khunti", 
+                "Seraikela Kharsawan", "East Singhbhum", "West Singhbhum", "Garhwa", 
+                "Raghunathganj", "Chandwa", "Bermo", "Bokaro Steel City"
+            ],
+           "Karnataka": [
+                "Bengaluru", "Mysuru", "Mangalore", "Hubballi", "Dharwad",
+                "Belagavi", "Tumakuru", "Shivamogga", "Ballari", "Bijapur",
+                "Udupi", "Chikmagalur", "Chitradurga", "Hassan", "Raichur",
+                "Kodagu", "Mandya", "Dakshina Kannada", "Bidar", "Gulbarga",
+                "Kolar", "Bagalkot", "Koppal", "Chikkaballapur", "Yadgir",
+                "Haveri", "Karwar", "Ramanagaram", "Channarayapatna", "Puttur"
+            ], 
+            "Kerala": [
+                "Thiruvananthapuram", "Kochi", "Kozhikode", "Kottayam", "Thrissur",
+                "Malappuram", "Kannur", "Palakkad", "Alappuzha", "Idukki", 
+                "Wayanad", "Pathanamthitta", "Ernakulam", "Kollam", "Kasaragod",
+                "Vatakara", "Punalur", "Attingal", "Cherthala", "Muvattupuzha",
+                "Perumbavoor", "Nellikkunnu", "Nedumangad", "Vaikom", "Mattancherry",
+                "Sreekariyam", "Peringathur", "Manjeri", "Changanassery", "Kozhikode City"
+            ],
+            "Madhya Pradesh": [
+                "Bhopal", "Indore", "Gwalior", "Jabalpur", "Ujjain", 
+                "Sagar", "Ratlam", "Khandwa", "Satna", "Burhanpur", 
+                "Shivpuri", "Chhindwara", "Rewa", "Khargone", "Hoshangabad", 
+                "Dewas", "Sehore", "Vidisha", "Mandsaur", "Neemuch", 
+                "Pipariya", "Shahdol", "Guna", "Balaghat", "Tikamgarh", 
+                "Betul", "Singrauli", "Shivpuri", "Narmada", "Rajgarh"
+            ],
+            "Maharashtra": [
+                "Mumbai", "Pune", "Nagpur", "Nashik", "Aurangabad", 
+                "Solapur", "Thane", "Kolhapur", "Amravati", "Nanded", 
+                "Jalna", "Dhule", "Ratnagiri", "Chandrapur", "Satara", 
+                "Bhusawal", "Karad", "Latur", "Sangli", "Parbhani", 
+                "Bhandara", "Yavatmal", "Akola", "Wardha", "Sindhudurg", 
+                "Gadchiroli", "Washim", "Osmanabad", "Palghar", "Navi Mumbai"
+            ],
+            "Manipur": [
+                "Imphal", "Thoubal", "Churachandpur", "Kakching", "Bishnupur", 
+                "Jiribam", "Senapati", "Tamenglong", "Ukhrul", "Noney", 
+                "Chandel", "Kangpokpi", "Moreh", "Tengnoupal", "Pherzawl"
+            ],
+            "Meghalaya": [
+                "Shillong", "Tura", "Jowai", "Nongpoh", "Williamnagar", 
+                "Baghmara", "Mawkyrwat", "Khliehriat", "Ampati", "Ranikor", 
+                "Resubelpara", "Nongstoin", "Bhimunigri", "Cherrapunji"
+            ],
+            "Mizoram": [
+                "Aizawl", "Lunglei", "Champhai", "Siaha", "Serchhip", 
+                "Kolasib", "Mamit", "Lawngtlai", "Hnahthial", "Khawzawl",
+                "Vairengte", "Tlabung", "Thingdawl"
+            ],
+            "Nagaland": [
+                "Kohima", "Dimapur", "Mokokchung", "Wokha", "Tuensang", 
+                "Zunheboto", "Mon", "Phek", "Kiphire", "Longleng", 
+                "Chümoukedima", "Peren"
+            ],
+            "Odisha": [
+                "Bhubaneswar", "Cuttack", "Rourkela", "Berhampur", "Sambalpur",
+                "Balasore", "Bargarh", "Angul", "Puri", "Kendrapara",
+                "Dhenkanal", "Jajpur", "Jharsuguda", "Koraput", "Kalahandi",
+                "Mayurbhanj", "Nayagarh", "Rayagada", "Boudh", "Keonjhar"
+            ],
+            "Punjab": [
+                "Amritsar", "Ludhiana", "Jalandhar", "Patiala", "Bathinda",
+                "Mohali", "Moga", "Hoshiarpur", "Firozpur", "Faridkot",
+                "Barnala", "Rupnagar", "Kapurthala", "Sangrur", "Gurdaspur",
+                "Muktsar", "Tarn Taran", "Nawanshahr", "Pathankot", "Mansa"
+            ],
+            "Rajasthan": [
+                "Jaipur", "Jodhpur", "Udaipur", "Kota", "Bikaner",
+                "Ajmer", "Alwar", "Pushkar", "Pali", "Sikar",
+                "Jhunjhunu", "Churu", "Sri Ganganagar", "Tonk", "Bhilwara",
+                "Barmer", "Sawai Madhopur", "Nagaur", "Dholpur", "Jaisalmer"
+            ],
+            "Sikkim": [
+                "Gangtok", "Namchi", "Jorethang", "Mangan", "Rangpo",
+                "Singtam", "Pakyong", "Lachen", "Lachung"
+            ],
+            "Tamil Nadu": [
+                "Chennai", "Coimbatore", "Madurai", "Trichy", "Salem",
+                "Tirunelveli", "Erode", "Vellore", "Dindigul", "Tiruppur",
+                "Thanjavur", "Tuticorin", "Kanchipuram", "Ranipet", "Krishnagiri",
+                "Cuddalore", "Nagercoil", "Karur", "Pudukkottai", "Sivakasi",
+                "Virudhunagar", "Arakkonam", "Rajapalayam", "Theni", "Ramanathapuram"
+            ],
+            "Telangana": [
+                "Hyderabad", "Warangal", "Khammam", "Nizamabad", "Karimnagar",
+                "Khagaznagar", "Mahabubnagar", "Ramagundam", "Suryapet", "Jagtial",
+                "Adilabad", "Mancherial", "Nirmal", "Peddapalli", "Jagitial",
+                "Siddipet", "Miryalaguda", "Vemulawada", "Kamareddy", "Wanaparthy"
+            ],
+            "Tripura": [
+                "Agartala", "Udaipur", "Ambassa", "Dharmanagar", "Kailasahar",
+                "Belonia", "Bishalgarh", "Khowai", "Melaghar", "Sonamura",
+                "Jirania", "Kanchanpur", "Sadar", "Ranir Bazar", "Madhuban"
+            ],
+            "Uttar Pradesh": [
+                "Lucknow", "Kanpur", "Agra", "Varanasi", "Meerut",
+                "Allahabad", "Aligarh", "Gorakhpur", "Mathura", "Bareilly",
+                "Noida", "Ghaziabad", "Firozabad", "Moradabad", "Muzaffarnagar",
+                "Saharanpur", "Rampur", "Jhansi", "Etawah", "Budaun"
+            ],
+            "Uttarakhand": [
+                "Dehradun", "Haridwar", "Nainital", "Rishikesh", "Haldwani",
+                "Roorkee", "Kotdwar", "Pauri", "Udham Singh Nagar", "Almora",
+                "Tehri", "Rudrapur", "Kashipur", "Jaspur", "Bajpur"
+            ],
+            "West Bengal": [
+                "Kolkata", "Siliguri", "Asansol", "Durgapur", "Howrah",
+                "Burdwan", "Midnapore", "Malda", "Kharagpur", "Raniganj",
+                "Jalpaiguri", "Cooch Behar", "Shibpur", "Naihati", "Bally",
+                "Bankura", "Chandannagar", "Raghunathganj", "Santiniketan"
+            ],
+            "Delhi": [
+                "New Delhi", "Central Delhi", "North Delhi", "South Delhi", 
+                "East Delhi", "West Delhi", "North East Delhi", "North West Delhi", 
+                "South West Delhi", "Shahdara"
+            ],
+            "Jammu and Kashmir": [
+                "Srinagar", "Jammu", "Anantnag", "Baramulla", "Pulwama", 
+                "Kathua", "Kupwara", "Udhampur", "Rajouri", "Poonch", 
+                "Samba", "Doda", "Reasi", "Kishtwar", "Kulgam"
+            ],
+            "Ladakh": [
+                "Leh", "Kargil", "Nubra Valley", "Zanskar", "Sham Valley"
+            ],
+            "Andaman and Nicobar Islands": [
+                "Port Blair", "Diglipur", "Mayabunder", "Car Nicobar", "Havelock"
+            ],
+            "Chandigarh": ["Chandigarh"],
+            "Dadra and Nagar Haveli and Daman and Diu": ["Daman", "Diu", "Silvassa"],
+            "Lakshadweep": [
+                "Kavaratti", "Agatti", "Amini", "Andrott", "Bitra", "Chetlat", "Minicoy", "Kochi"
+            ],
+            "Puducherry": ["Puducherry", "Karaikal", "Mahe", "Yanam"],
+            // Add more states and cities as needed
+        };
+
+        // Populate the state dropdown on page load
+        window.onload = function() {
+            const stateSelect = document.getElementById("state");
+            for (let state in locationData) {
+                const option = document.createElement("option");
+                option.value = state;
+                option.textContent = state;
+                stateSelect.appendChild(option);
+            }
+        };
+
+        // Function to populate cities based on selected state
+        function populateCities() {
+            const stateSelect = document.getElementById("state");
+            const citySelect = document.getElementById("city");
+            const selectedState = stateSelect.value;
+
+            // Clear previous city options
+            citySelect.innerHTML = '<option value="">Select City</option>';
+
+            if (locationData[selectedState]) {
+                locationData[selectedState].forEach(city => {
+                    const option = document.createElement("option");
+                    option.value = city;
+                    option.textContent = city;
+                    citySelect.appendChild(option);
+                });
+            }
+        }
+    </script>
+</body>
+</html>

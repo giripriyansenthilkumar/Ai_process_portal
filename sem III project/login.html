@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - AI Approval Process Portal</title>
+    <link rel="stylesheet" href="style_login.css">
+    <script src="script_login.js" defer></script>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>AI Approval Portal</h2>
+        <ul>
+            <li><a href="home_ai.html">Home</a></li>
+            <li><a href="application.html">Apply</a></li>
+            <li><a href="status.html">Track Status</a></li>
+            <li><a href="login.html">Login</a></li>
+        </ul>
+    </div>
+
+    <div class="content login-content">
+        <section class="login-section">
+            <h2>Login to Your Account</h2>
+            <form id="loginForm">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required placeholder="Enter your username">
+
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required placeholder="Enter your password">
+
+                <button type="button" class="btn" onclick="login()">Login</button>
+            </form>
+            <p id="loginStatus" class="login-status"></p>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 AI Approval Process Portal</p>
+    </footer>
+</body>
+</html>

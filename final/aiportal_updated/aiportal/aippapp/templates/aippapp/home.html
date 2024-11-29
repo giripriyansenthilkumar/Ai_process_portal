@@ -1,0 +1,63 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Approval Process Portal</title>
+    <link rel="stylesheet" href="{% static "aippapp/style.css" %}">
+</head>
+<body>
+    <div id="loading" class="loading">
+        <div c
+        lass="spinner"></div>
+    </div>
+
+    <div id="popup" class="popup" style="display: none;">
+        <p id="popupMessage"></p>
+        <button onclick="closePopup()">Close</button>
+    </div>
+
+    <header>
+        <div class="header-container">
+            <!-- Checkbox burger menu near h1 header -->
+            <label class="burger" for="burger">
+                <input type="checkbox" id="burger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </label>
+            <h1>AI Approval Process Portal</h1>
+        </div>
+        
+        <!-- Side menu container -->
+        <div id="menuContainer" class="menu-hidden">
+            <nav id="menu">
+                <ul>
+                    <li><a href="{% url 'home' %}"><i class="icon-home"></i>Home</a></li>
+                    <li><a href="{% url 'app1' %}"><i class="icon-apply"></i>Apply</a></li>
+                    <li><a href="status.html"><i class="icon-track"></i>Track Status</a></li>
+                    <li><a href="{% url 'register' %}"><i class="icon-login"></i>Register</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h2 style="text-align: center;">Get your documents approved with ease!</h2>
+        <p style="text-align: center;">Submit your documents and we'll verify them for you.</p>
+        <a href="{% url 'app1' %}" class="btn" style="text-align: center;">Apply Now</a>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 AI Approval Process Portal</p>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            const menuContainer = document.getElementById('menuContainer');
+            menuContainer.style.display = (menuContainer.style.display === 'block') ? 'none' : 'block';
+        }
+    </script>
+</body>
+</html>

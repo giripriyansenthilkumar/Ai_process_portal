@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Document Status</title>
+    <link rel="stylesheet" href="style_status.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div id="loading" class="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <header>
+        <h1>AI Approval Process Portal</h1>
+        <nav>
+            <ul>
+                <li><a href="home.html">Home</a></li>
+                <li><a href="application.html">Apply</a></li>
+                <li><a href="status.html">Track Status</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="status-section">
+        <h2>Check Your Application Status</h2>
+        <form action="/check_status" method="POST">
+            <label for="applicationId">Application ID:</label>
+            <input type="text" id="applicationId" name="applicationId" placeholder="Enter your application ID" required>
+            <button type="submit" class="btn">Check Status</button>
+        </form>
+    </section>
+    <h1> </h1>
+    <h1> </h1>
+    <h1> </h1>
+    <footer>
+        <p>&copy; 2024 AI Approval Process Portal</p>
+    </footer>
+</body>
+</html>

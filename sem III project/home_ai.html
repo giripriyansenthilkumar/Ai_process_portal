@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Approval Process Portal</title>
+    <link rel="stylesheet" href="style_home.css">
+    <script src="script_home.js" defer></script>
+</head>
+<body>
+    <header>
+        <div class="menu-icon" onclick="toggleMenu()">
+            &#9776; <!-- Hamburger Icon -->
+        </div>
+        <h1>AI Approval Process Portal</h1>
+        <div id="profileIcon" class="profile-icon" style="display: none;">👤</div> <!-- Profile Icon -->
+    </header>
+
+    <nav id="sidebarMenu" class="sidebar">
+        <ul>
+            <li><a href="home_ai.html">Home</a></li>
+            <li><a href="application.html">Apply</a></li>
+            <li><a href="status.html">Track Status</a></li>
+            <li id="loginLink"><a href="javascript:void(0);" onclick="showLoginPopup()">Login</a></li>
+            <li id="logoutLink" style="display: none;"><a href="javascript:void(0);" onclick="logout()">Logout</a></li> <!-- Logout link -->
+        </ul>
+    </nav>
+
+    <div id="mainContent" class="content">
+        <section class="hero">
+            <h2>Get your documents approved with ease!</h2>
+            <p>Submit your documents and we'll verify them for you.</p>
+            <a href="application.html" class="btn">Apply Now</a>
+        </section>
+
+        <div id="loginPopup" class="popup" style="display: none;">
+            <div class="popup-content">
+                <span id="closePopup" class="close-btn">&times;</span>
+                <h2>Login Required</h2>
+                <p>Please <a href="javascript:void(0);" onclick="login()" class="popup-link-box"><a href="login.html"> Login</a></a> to continue.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 AI Approval Process Portal</p>
+    </footer>
+</body>
+</html>

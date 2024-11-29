@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Approval Process Portal</title>
+    <link rel="stylesheet" href="style1.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div id="loading" class="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <div id="popup" class="popup" style="display: none;">
+        <p id="popupMessage"></p>
+        <button onclick="closePopup()">Close</button>
+    </div>
+
+    <header>
+        <h1>AI Approval Process Portal</h1>
+        <nav>
+            <ul>
+                <li><a href="home_ai.html">Home</a></li>
+                <li><a href="app1.html">Apply</a></li>
+                <li><a href="status.html">Track Status</a></li>
+                <li id="authLink"></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h2 style="text-align: center;">Get your documents approved with ease!</h2>
+        <p style="text-align: center;">Submit your documents and we'll verify them for you.</p>
+        <a href="app1.html" class="btn" style="text-align: center;">Apply Now</a>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 AI Approval Process Portal</p>
+    </footer>
+</body>
+</html>

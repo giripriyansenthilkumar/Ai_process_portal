@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Approval Process Portal - Home</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script1.js" defer></script>
+</head>
+<body>
+    <!-- Login Section -->
+    <section class="login-section" id="loginSection">
+        <h2>Login to AI Approval Process Portal</h2>
+        <form id="loginForm" onsubmit="return login()">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <button type="submit" class="btn">Login</button>
+        </form>
+        <p id="loginMessage"></p>
+    </section>
+
+    <!-- Main Content (Hidden Until Login) -->
+    <header id="mainHeader" style="display: none;">
+        <h1>AI Approval Process Portal</h1>
+        <nav>
+            <ul>
+                <li><a href="home ai.html">Home</a></li>
+                <li><a href="application.html">Apply</a></li>
+                <li><a href="status.html">Track Status</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Track Status Section -->
+    <section class="status-section" id="statusSection" style="display: none;">
+        <h2>Track Your Application Status</h2>
+        <form action="/track" method="POST">
+            <label for="trackingid">Enter Tracking ID:</label>
+            <input type="text" id="trackingid" name="trackingid" required>
+
+            <button type="submit" class="btn">Track</button>
+        </form>
+
+        <div class="status-result">
+            <!-- Status result will appear here after form submission -->
+            <p>Application Status: <span id="status-text">Pending...</span></p>
+        </div>
+    </section>
+
+    <footer id="footer" style="display: none;">
+        <p>&copy; 2024 AI Approval Process Portal</p>
+    </footer>
+</body>
+</html>

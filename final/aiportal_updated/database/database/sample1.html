@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application - Documents Upload</title>
+    <style>
+        /* Style for the popup */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .popup-content {
+            background-color: #eeeeca;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .popup button {
+            background-color: #5cb85c;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #ffffff;
+        }
+        .header, .footer {
+            width: 100%;
+            background-color: #333;
+            color: #53b6c5;
+            text-align: center;
+            padding: 1em 0;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            padding: 0;
+        }
+        nav ul li {
+            margin: 0 1em;
+        }
+        nav ul li a {
+            color: #000000;
+            text-decoration: none;
+        }
+        .form-section {
+            width: 80%;
+            max-width: 600px;
+            margin: 2em auto;
+            padding: 2em;
+            border: 1px solid #ccc;
+            background-color: #53b6c5;
+            border-radius: 8px;
+        }
+        form label, form input, form button {
+            display: block;
+            width: 100%;
+            margin-bottom: 1em;
+        }
+        form input, form button {
+            padding: 0.5em;
+            font-size: 1em;
+            border-radius: 10px;
+        }
+        form button {
+            background-color: #333;
+            color: #eeeeca;
+            border: none;
+            cursor: pointer;
+        }
+        form button:hover {
+            background-color: #555;
+        }
+        .btn {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #555;
+        }
+        .btn_1:hover, .btn_2:hover, .btn_3:hover {
+            background-color: #333;
+            color: #fff;
+            border: none;
+        }
+        .upload-container {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+        /* Medium size for the upload button */
+        .upload-container button {
+            padding: 8px 10px; /* Adjusted padding */
+            font-size: 14px; /* Medium font size */
+            background-color: #333;
+            color: #eeeeca;
+            border: none;
+            border-radius: .px;
+            cursor: pointer;
+        }
+        .upload-container button.success {
+            background-color: #4CAF50;
+            color: #fff;
+        }
+        .upload-container button.success::after {
+            content: ' ✔';
+        }
+        .button:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <!-- Include header -->
+    <header>
+        <h1>AI Approval Process Portal</h1>
+        <!--<nav>
+            <ul>
+                <li><a href="home.html">Home</a></li>
+                <li><a href="application_1.html">Apply</a></li>
+                <li><a href="status.html">Track Status</a></li>
+                <li><a href="login.html" id="loginLink">Login</a></li>
+            </ul>
+        </nav>-->
+    </header>
+
+    <!-- Form Section -->
+    <section class="form-section">
+        <h2>Upload Documents</h2>
+        <form id="documentForm" action="home_ai.html" enctype="multipart/form-data">
+            <!-- Container for document upload fields -->
+            <div id="documentContainer"></div>
+
+            <!-- Navigation Buttons -->
+            <button type="button" onclick="location.href='app3.html'" class="btn">Previous</button>
+            <button type="submit" class="btn" onclick="submitForm(event)">Submit</button> 
+            </form>
+            <!-- Page Navigation Buttons -->
+            <button type="button" onclick="location.href='app1.html'" class="btn_1">1</button>
+            <button type="button" onclick="location.href='app2.html'" class="btn_2">2</button>
+            <button type="button" onclick="location.href='app3.html'" class="btn_3">3</button>
+        </form>
+    </section>
+
+    <!-- Success Popup -->
+    <div id="successPopup" class="popup">
+        <div class="popup-content">
+            <h3>Application Submitted Successfully!</h3>
+            <button onclick="closePopup()">Close</button>
+        </div>
+    </div>
+
+    <!-- Include footer -->
+    <footer>
+        <p>&copy; 2024 AI Approval Process Portal</p>
+    </footer>
+
+    <script>
+        // Automatically add default document upload fields on page load
+        document.addEventListener("DOMContentLoaded", function () {
+            const documents = [
+                { id: "aadhaar", label: "Aadhaar Card" },
+                { id: "pan", label: "Pan Card" },
+                { id: "income_certificate", label: "Income Certificate" },
+                { id: "bank_statement", label: "Bank Statement" },
+                { id: "admission_letter", label: "Admission Letter" },
+                { id: "course_fee_structure", label: "Course Fee Structure" },
+                { id: "allotment_order", label: "Allotment Order" },
+                { id: "community_certificate", label: "Community Certificate" }
+            ];
+
+            const container = document.getElementById("documentContainer");
+
+            documents.forEach(doc => {
+                const docField = createDocumentField(doc.id, doc.label);
+                container.appendChild(docField);
+            });
+        });
+
+        // Function to create document fields dynamically
+        function createDocumentField(id, label) {
+            const container = document.createElement("div");
+            container.className = "document-field";
+
+            // Label and input for document number
+            const docLabel = document.createElement("label");
+            docLabel.innerText = `${label} Number:`;
+            const docInput = document.createElement("input");
+            docInput.type = "text";
+            docInput.name = `${id}_number`;
+            docInput.placeholder = `Enter ${label} number`;
+            docInput.required = true;
+
+            // File upload input and upload button
+            const uploadContainer = document.createElement("div");
+            uploadContainer.className = "upload-container";
+
+            const fileInput = document.createElement("input");
+            fileInput.type = "file";
+            fileInput.name = `${id}_file`;
+            fileInput.accept = ".pdf, .jpg, .jpeg";
+            fileInput.required = true;
+
+            const uploadButton = document.createElement("button");
+            uploadButton.type = "button";
+            uploadButton.innerText = "Upload";
+            uploadButton.onclick = () => handleUpload(id, uploadButton);
+
+            uploadContainer.appendChild(fileInput);
+            uploadContainer.appendChild(uploadButton);
+
+            // Append elements to container
+            container.appendChild(docLabel);
+            container.appendChild(docInput);
+            container.appendChild(uploadContainer);
+
+            return container;
+        }
+
+        // Function to handle upload button click and show green tick
+        // Function to handle upload button click and send data to the backend
+        // Function to handle upload button click and send data to the backend
+    function handleUpload(id, uploadButton) {
+        const documentType = id; // Use the document's ID as its type (e.g., 'aadhaar', 'pan')
+        const documentNumber = document.querySelector(`input[name="${id}_number"]`).value;
+        const fileInput = document.querySelector(`input[name="${id}_file"]`);
+        
+        if (fileInput.files.length > 0 && documentNumber) {
+            // Prepare the form data
+            const formData = new FormData();
+            formData.append('document_type', documentType);
+            formData.append('document_number', documentNumber);
+            formData.append('document_file', fileInput.files[0]);
+
+            // Send the file and document data to the backend
+            fetch('/upload/', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    uploadButton.innerText = "Uploaded";
+                    uploadButton.classList.add("success");
+                    alert(data.message);
+                } else {
+                    alert('Error uploading document: ' + (data.error || 'Unknown error.'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error uploading document!');
+            });
+        } else {
+            alert('Please choose a file and enter the document number.');
+        }
+    }
+
+
+        // Form submission with validation
+        function submitForm(event) {
+            event.preventDefault();
+
+            const fileInputs = document.querySelectorAll("input[type='file']");
+            let allFilesUploaded = true;
+
+            fileInputs.forEach(fileInput => {
+                if (!fileInput.value) {
+                    allFilesUploaded = false;
+                }
+            });
+
+            if (allFilesUploaded) {
+                document.getElementById('successPopup').style.display = 'flex';
+
+                setTimeout(() => {
+                    window.location.href = 'home_ai.html';
+                }, 3000);
+            } else {
+                alert('Please upload all required files before submitting.');
+            }
+        }
+
+        // Close the success popup
+        function closePopup() {
+            document.getElementById('successPopup').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

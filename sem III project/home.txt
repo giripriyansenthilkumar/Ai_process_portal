@@ -1,0 +1,105 @@
+// src/App.js
+import React, { useState } from "react";
+import axios from "axios";
+import './App.css';
+
+function App() {
+  const [formData, setFormData] = useState({
+    name: "",
+    loanAmount: "",
+    dob: "",
+    document: null,
+  });
+  const [uploadStatus, setUploadStatus] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleFileChange = (e) => {
+    setFormData({ ...formData, document: e.target.files[0] });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setUploadStatus("Uploading...");
+
+    const data = new FormData();
+    data.append("name", formData.name);
+    data.append("loanAmount", formData.loanAmount);
+    data.append("dob", formData.dob);
+    data.append("document", formData.document);
+
+    try {
+      // Send form data to the backend API
+      const response = await axios.post("http://localhost:5000/api/submit", data);
+      setUploadStatus("Upload successful!");
+    } catch (error) {
+      setUploadStatus("Error during submission. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="App">
+      <h1>AI Approval Process Portal</h1>
+      <form onSubmit={handleSubmit} className="form-container">
+        <label>
+          Name:
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleInputChange}
+            required
+          />
+        </label>
+
+        <label>
+          Date of Birth:
+          <input
+            type="date"
+            name="dob"
+            value={formData.dob}
+            onChange={handleInputChange}
+            required
+          />
+        </label>
+
+        <label>
+          Loan Amount:
+          <input
+            type="number"
+            name="loanAmount"
+            value={formData.loanAmount}
+            onChange={handleInputChange}
+            required
+          />
+        </label>
+
+        <label>
+          Upload Document:
+          <input
+            type="file"
+            name="document"
+            accept="application/pdf,image/*"
+            onChange={handleFileChange}
+            required
+          />
+        </label>
+
+        <button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "Submitting..." : "Submit"}
+        </button>
+      </form>
+
+      {uploadStatus && <p>{uploadStatus}</p>}
+    </div>
+  );
+}
+
+export default App;

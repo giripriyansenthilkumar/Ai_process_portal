@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebRTC Video Chat</title>
+    <style>
+        .video-container {
+            display: flex;
+            gap: 20px;
+            margin: 20px;
+        }
+        video {
+            width: 400px;
+            height: 300px;
+            border: 1px solid #ccc;
+            background: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="video-container">
+        <div>
+            <h2>Local Camera Feed</h2>
+            <video id="localVideo" autoplay playsinline></video>
+        </div>
+        <div>
+            <h2>Remote Camera Feed</h2>
+            <video id="remoteVideo" autoplay playsinline></video>
+        </div>
+    </div>
+
+    <script>
+        let localStream;
+        let peerConnection;
+        let ws;
+        let isInitiator = false;
+
+        // WebRTC configuration
+        const configuration = {
+            iceServers: [
+                { urls: 'stun:stun.l.google.com:19302' }
+            ]
+        };
+
+        // Connect to signaling server
+        function connectSignalingServer() {
+            ws = new WebSocket('ws://192.168.157.14:8080');
+
+            ws.onmessage = async (event) => {
+                const data = JSON.parse(event.data);
+
+                if (data.role) {
+                    isInitiator = data.role === 'caller';
+                    await startVideo();
+                } else if (data.type === 'offer') {
+                    await handleOffer(data);
+                } else if (data.type === 'answer') {
+                    await handleAnswer(data);
+                } else if (data.type === 'candidate') {
+                    await handleCandidate(data);
+                }
+            };
+
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+            };
+        }
+
+        // Start local video
+        async function startVideo() {
+            try {
+                localStream = await navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: true
+                });
+                document.getElementById('localVideo').srcObject = localStream;
+
+                createPeerConnection();
+
+                if (isInitiator) {
+                    await createAndSendOffer();
+                }
+            } catch (error) {
+                console.error('Error accessing media devices:', error);
+            }
+        }
+
+        // Create RTCPeerConnection
+        function createPeerConnection() {
+            peerConnection = new RTCPeerConnection(configuration);
+
+            // Add local stream
+            localStream.getTracks().forEach(track => {
+                peerConnection.addTrack(track, localStream);
+            });
+
+            // Handle incoming streams
+            peerConnection.ontrack = (event) => {
+                document.getElementById('remoteVideo').srcObject = event.streams[0];
+            };
+
+            // Handle ICE candidates
+            peerConnection.onicecandidate = (event) => {
+                if (event.candidate) {
+                    ws.send(JSON.stringify({
+                        type: 'candidate',
+                        candidate: event.candidate
+                    }));
+                }
+            };
+        }
+
+        // Create and send offer
+        async function createAndSendOffer() {
+            try {
+                const offer = await peerConnection.createOffer();
+                await peerConnection.setLocalDescription(offer);
+
+                ws.send(JSON.stringify({
+                    type: 'offer',
+                    sdp: offer
+                }));
+            } catch (error) {
+                console.error('Error creating offer:', error);
+            }
+        }
+
+        // Handle incoming offer
+        async function handleOffer(data) {
+            try {
+                await peerConnection.setRemoteDescription(new RTCSessionDescription(data));
+
+                const answer = await peerConnection.createAnswer();
+                await peerConnection.setLocalDescription(answer);
+
+                ws.send(JSON.stringify({
+                    type: 'answer',
+                    sdp: answer
+                }));
+            } catch (error) {
+                console.error('Error handling offer:', error);
+            }
+        }
+
+        // Handle incoming answer
+        async function handleAnswer(data) {
+            try {
+                await peerConnection.setRemoteDescription(new RTCSessionDescription(data));
+            } catch (error) {
+                console.error('Error handling answer:', error);
+            }
+        }
+
+        // Handle incoming ICE candidate
+        async function handleCandidate(data) {
+            try {
+                await peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
+            } catch (error) {
+                console.error('Error handling ICE candidate:', error);
+            }
+        }
+
+        // Start the application
+        connectSignalingServer();
+    </script>
+</body>
+</html>
